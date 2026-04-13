@@ -195,6 +195,7 @@ nav{position:sticky;top:0;z-index:500;height:64px;background:var(--nav-bg);backd
 .fd{width:6px;height:6px;border-radius:50%}
 .fd.w{background:var(--accent-l)}.fd.d{background:var(--text3)}.fd.l{background:var(--red-l)}
 
+
 /* ============================================================
    SIDEBAR WIDGETS
 ============================================================ */
@@ -401,17 +402,14 @@ footer .f-copy{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace
   .hstat-v{font-size:22px}
   /* WRAP */
   .wrap,.wrap-narrow{padding:0 14px}
-
-  /* PUAN TABLOSU - MOBİLDE G, B, M GİZLENİYOR */
+  /* PUAN TABLOSU */
   .standings-table th, .standings-table td{padding:7px 4px;font-size:11px}
-  .standings-table th:nth-child(4), .standings-table td:nth-child(4), /* G */
-  .standings-table th:nth-child(5), .standings-table td:nth-child(5), /* B */
-  .standings-table th:nth-child(6), .standings-table td:nth-child(6), /* M */
-  .standings-table th:nth-child(9), .standings-table td:nth-child(9) {display:none} /* Averaj (önceki kod) */
-  
+  .standings-table th:nth-child(4), .standings-table td:nth-child(4), 
+  .standings-table th:nth-child(5), .standings-table td:nth-child(5), 
+  .standings-table th:nth-child(6), .standings-table td:nth-child(6), 
+  .standings-table th:nth-child(9), .standings-table td:nth-child(9){display:none} 
   .s-tname{font-size:11px;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .standings-wrap{overflow-x:auto}
-  
   /* MAÇ KARTI */
   .mc-body{grid-template-columns:1fr 70px 1fr;gap:4px;padding:12px 10px}
   .mc-score-num{font-size:22px}
@@ -466,7 +464,7 @@ footer .f-copy{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace
   .mc-score-num{font-size:18px}
   .mc-team-name{font-size:10px}
   .standings-table th:nth-child(7), .standings-table td:nth-child(7),
-  .standings-table th:nth-child(8), .standings-table td:nth-child(8){display:none} /* GF/GA gizle çok dar ekranda */
+  .standings-table th:nth-child(8), .standings-table td:nth-child(8){display:none} 
   .hstat{padding:8px 10px}
   .hstat-v{font-size:18px}
   .hstat-l{font-size:8px}
@@ -474,14 +472,14 @@ footer .f-copy{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace
 </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
   
   <script>
     window.FIREBASE_CONFIG = {
       apiKey: "AIzaSyCY9TKOMW2e0vhSJ7wEdVA2T0VoZmSOios",
       authDomain: "futbolligi-c731d.firebaseapp.com",
-      // Veritabanı URL'si yeni config'de bazen bulunmaz. Çoğu durumda yapı bu şekildedir:
       databaseURL: "https://futbolligi-c731d-default-rtdb.firebaseio.com",
       projectId: "futbolligi-c731d",
       storageBucket: "futbolligi-c731d.firebasestorage.app",
@@ -847,15 +845,15 @@ function fbSave(){
 }
 
 let TEAMS   = JSON.parse(JSON.stringify(DEF_TEAMS));
-let RESULTS = [];   // [{g,home,away,hs,as,date,time,ts,events:[]}]
-let UPCOMING= [];   // [{id,g,home,away,date,time,venue,ts}]
-let TMETA   = {};   // {name:{img}}
-let PLAYERS = {};   // {name:[{id,name,num,pos}]}
-let ANNS    = [];   // [{id,title,body,type,date,ts}]
+let RESULTS = [];   
+let UPCOMING= [];   
+let TMETA   = {};   
+let PLAYERS = {};   
+let ANNS    = [];   
 
 let loggedIn=false,homeGroup='A',teamsGroup='A',mFilter='all',selPTeam=null,curDetailTeam=null;
 let evMatchTs=null,evType='goal';
-let editMatchTs=null; // For match editing
+let editMatchTs=null; 
 
 // ================================================================
 // UTILS
@@ -881,7 +879,6 @@ function showAlert(el,msg,ok){
 }
 function showAlertId(id,msg,ok){showAlert(document.getElementById(id),msg,ok)}
 
-// JSON Export for Backup
 function exportData(){
   const data = JSON.stringify({TEAMS, RESULTS, UPCOMING, TMETA, PLAYERS, ANNS}, null, 2);
   const blob = new Blob([data], {type: 'application/json'});
@@ -911,15 +908,15 @@ function computeStats(){
 
 function headToHeadResult(aName, bName) {
   const match = RESULTS.find(r => (r.home === aName && r.away === bName) || (r.home === bName && r.away === aName));
-  if (!match) return 0; // Oynamadılar veya berabere
+  if (!match) return 0; 
   if (match.home === aName) {
-    if (match.hs > match.as) return -1; // a kazandı
-    if (match.hs < match.as) return 1;  // b kazandı
+    if (match.hs > match.as) return -1; 
+    if (match.hs < match.as) return 1;  
   } else {
-    if (match.as > match.hs) return -1; // a kazandı
-    if (match.as < match.hs) return 1;  // b kazandı
+    if (match.as > match.hs) return -1; 
+    if (match.as < match.hs) return 1;  
   }
-  return 0; // berabere
+  return 0; 
 }
 
 function calcStandings(g){
@@ -935,13 +932,13 @@ function calcStandings(g){
   });
   
   return Object.values(rows).sort((a,b) => {
-    if (b.pts !== a.pts) return b.pts - a.pts; // 1. Puan
+    if (b.pts !== a.pts) return b.pts - a.pts; 
     const h2h = headToHeadResult(a.name, b.name);
-    if (h2h !== 0) return h2h; // 2. İkili Averaj
+    if (h2h !== 0) return h2h; 
     const avA = a.gf - a.ga;
     const avB = b.gf - b.ga;
-    if (avB !== avA) return avB - avA; // 3. Genel Averaj
-    return b.gf - a.gf; // 4. Atılan Gol
+    if (avB !== avA) return avB - avA; 
+    return b.gf - a.gf; 
   });
 }
 
@@ -1264,18 +1261,17 @@ function renderAnnouncePage(){
 }
 
 // ================================================================
-// ADMIN: AUTH (FIREBASE DESTEKLİ)
+// ADMIN: AUTH (FİREBASE)
 // ================================================================
 function doLogin(){
   const u = document.getElementById('au').value.trim();
   const p = document.getElementById('ap').value;
   
-  // Eğer kullanıcı sadece "admin" yazarsa, sonuna @aybu.com ekleyelim (kolaylık için)
+  // Kolaylık için "@" yoksa varsayılan domaini ekleyelim
   const email = u.includes('@') ? u : u + '@aybu.com';
 
   firebase.auth().signInWithEmailAndPassword(email, p)
     .then((userCredential) => {
-      // Başarılı giriş. Sayfa değişimi onAuthStateChanged içinde halledilecek.
       document.getElementById('ap').value = '';
     })
     .catch((error) => {
@@ -1334,7 +1330,6 @@ function submitResult(){
   if(home===away){showAlert(al,'Aynı takım seçilemez!',false);return;}
 
   if (editMatchTs) {
-    // Mevcut maçı düzenle (olaylar silinmez)
     const match = RESULTS.find(r => r.ts === editMatchTs);
     if(match) {
       match.g = g; match.home = home; match.away = away;
@@ -1342,7 +1337,6 @@ function submitResult(){
     }
     showAlert(al,`Maç güncellendi: ${home} ${hs}–${as} ${away}`,true);
   } else {
-    // Yeni maç ekle
     const di=RESULTS.findIndex(r=>r.g===g&&r.home===home&&r.away===away);
     if(di>=0){if(!confirm(`${home} – ${away} zaten girilmiş. Güncelle?`))return;RESULTS.splice(di,1);}
     RESULTS.push({g,home,away,hs,as,date,time,ts:Date.now(),events:[]});
@@ -1358,7 +1352,7 @@ function editResult(ts){
   if (!match) return;
   editMatchTs = ts;
   document.getElementById('r-group').value = match.g;
-  updateSelects(); // Takımları gruba göre doldur
+  updateSelects(); 
   document.getElementById('r-home').value = match.home;
   document.getElementById('stn-home').textContent = match.home;
   document.getElementById('r-away').value = match.away;
@@ -1568,7 +1562,7 @@ function renderAnnLog(){
 }
 
 // ================================================================
-// ADMIN: TEAMS
+// ADMIN: TEAMS & STORAGE LOGO UPLOAD
 // ================================================================
 function renderAdminTeams(){
   const el=document.getElementById('admin-teams-list');
@@ -1581,7 +1575,12 @@ function renderAdminTeams(){
           const ei=GROUPS.indexOf(g)*4+i;
           const em=EMOJIS[ei%16];
           const imgId = `preview-${g}-${i}`;
-          const prev=m.img?`<img id="${imgId}" src="${m.img}" style="width:52px;height:52px;border-radius:10px;object-fit:cover;display:block;margin:0 auto 8px">`:`<div id="${imgId}-wrap" style="font-size:32px;text-align:center;margin-bottom:8px">${em}</div><img id="${imgId}" src="" style="display:none;width:52px;height:52px;border-radius:10px;object-fit:cover;margin:0 auto 8px">`;
+          
+          const prev=m.img
+            ?`<img id="${imgId}" src="${m.img}" style="width:52px;height:52px;border-radius:10px;object-fit:cover;display:block;margin:0 auto 8px">`
+            :`<div id="${imgId}-wrap" style="font-size:32px;text-align:center;margin-bottom:8px">${em}</div>
+              <img id="${imgId}" src="" style="display:none;width:52px;height:52px;border-radius:10px;object-fit:cover;margin:0 auto 8px">`;
+              
           return`<div style="background:var(--card-bg);border:1px solid var(--border2);border-radius:${10}px;padding:12px">
             ${prev}
             <div class="form-group" style="margin-bottom:8px"><label class="form-label">Takım Adı</label><input class="form-control" style="font-size:12px;padding:7px" type="text" id="tn-${g}-${i}" value="${name}"></div>
@@ -1597,30 +1596,43 @@ function renderAdminTeams(){
     </div>`).join('');
 }
 
-function handleTeamImg(oldName,input, imgId){
-  const file=input.files[0];if(!file)return;
-  if(file.size>2*1024*1024){alert('Max 2MB');return;}
-  const reader=new FileReader();
-  reader.onload=e=>{
-    TMETA[oldName]={...TMETA[oldName],img:e.target.result};
-    fbSave();
-    
-    const imgEl = document.getElementById(imgId);
-    const wrapEl = document.getElementById(imgId + '-wrap');
-    if (imgEl) {
-        imgEl.src = e.target.result;
-        imgEl.style.display = 'block';
+function handleTeamImg(oldName, input, imgId) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { alert('Maksimum dosya boyutu 2MB olmalıdır.'); return; }
+
+  // Yükleme sırasında kullanıcıya geri bildirim verelim
+  const uploadZone = input.parentElement;
+  const originalText = uploadZone.innerHTML;
+  uploadZone.innerHTML = '<div class="upload-text">⏳ Yükleniyor...</div>';
+
+  const storageRef = firebase.storage().ref('logos/' + oldName + '_' + Date.now());
+  const uploadTask = storageRef.put(file);
+
+  uploadTask.on('state_changed', 
+    null, 
+    (error) => { 
+      console.error("Yükleme hatası:", error); 
+      uploadZone.innerHTML = originalText;
+      alert("Logo yüklenirken bir hata oluştu!");
+    }, 
+    () => {
+      uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+        TMETA[oldName] = { ...TMETA[oldName], img: downloadURL };
+        fbSave(); 
+        
+        renderAdminTeams();
+        refreshAll();
+      });
     }
-    if (wrapEl) wrapEl.style.display = 'none';
-    
-    refreshAll();
-  };
-  reader.readAsDataURL(file);
+  );
 }
+
 function removeTeamImg(name){
   if(TMETA[name])delete TMETA[name].img;
   fbSave();renderAdminTeams();refreshAll();
 }
+
 function saveTeamInfo(g,i){
   const inp=document.getElementById(`tn-${g}-${i}`);if(!inp)return;
   const nw=inp.value.trim(),old=TEAMS[g][i];
@@ -1766,7 +1778,7 @@ function initFirebase(){
     : firebase.initializeApp(window.FIREBASE_CONFIG||{});
   window._db = firebase.database(app);
 
-  // Auth durumunu dinle (Giriş / Çıkış)
+  // Auth dinleyicisi (Önceki dosyada bu yoktu)
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       loggedIn = true;
