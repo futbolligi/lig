@@ -142,6 +142,7 @@ nav{position:sticky;top:0;z-index:500;height:64px;background:var(--nav-bg);backd
 .mc-group-pill{font-size:10px;font-family:'DM Mono',monospace;letter-spacing:1px;color:var(--accent-l);background:var(--accent-dim);padding:3px 8px;border-radius:100px;text-transform:uppercase}
 .mc-date-time{font-size:11px;color:var(--text3);margin-left:auto;display:flex;align-items:center;gap:4px}
 .mc-date-time .dot{width:3px;height:3px;border-radius:50%;background:var(--text3)}
+/* SKOR KAYMASI DÜZELTİLDİ: auto eklendi */
 .mc-body{padding:14px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
 .mc-side{display:flex;align-items:center;gap:10px}
 .mc-side.away{flex-direction:row-reverse;text-align:right}
@@ -149,6 +150,7 @@ nav{position:sticky;top:0;z-index:500;height:64px;background:var(--nav-bg);backd
 .mc-logo-wrap img{width:100%;height:100%;object-fit:cover}
 .mc-team-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);line-height:1.2}
 .mc-score-box{text-align:center}
+/* SKOR KAYMASI DÜZELTİLDİ: white-space:nowrap eklendi */
 .mc-score-num{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;line-height:1;color:var(--text);letter-spacing:-1px;white-space:nowrap}
 .mc-score-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px}
 .mc-upcoming .mc-score-num{font-size:16px;color:var(--text3)}
@@ -194,7 +196,6 @@ nav{position:sticky;top:0;z-index:500;height:64px;background:var(--nav-bg);backd
 .form-dots{display:flex;gap:2px;justify-content:center}
 .fd{width:6px;height:6px;border-radius:50%}
 .fd.w{background:var(--accent-l)}.fd.d{background:var(--text3)}.fd.l{background:var(--red-l)}
-
 
 /* ============================================================
    SIDEBAR WIDGETS
@@ -410,7 +411,7 @@ footer .f-copy{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace
   .standings-table th:nth-child(9), .standings-table td:nth-child(9){display:none} 
   .s-tname{font-size:11px;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .standings-wrap{overflow-x:auto}
-  /* MAÇ KARTI */
+  /* SKOR KAYMASI DÜZELTİLDİ: auto eklendi */
   .mc-body{grid-template-columns:1fr auto 1fr;gap:8px;padding:12px 10px}
   .mc-score-num{font-size:22px}
   .mc-team-name{font-size:11px}
@@ -460,6 +461,7 @@ footer .f-copy{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace
 }
 
 @media(max-width:400px){
+  /* SKOR KAYMASI DÜZELTİLDİ: auto eklendi */
   .mc-body{grid-template-columns:1fr auto 1fr;gap:6px}
   .mc-score-num{font-size:18px}
   .mc-team-name{font-size:10px}
@@ -480,9 +482,9 @@ footer .f-copy{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace
     window.FIREBASE_CONFIG = {
       apiKey: "AIzaSyCY9TKOMW2e0vhSJ7wEdVA2T0VoZmSOios",
       authDomain: "futbolligi-c731d.firebaseapp.com",
-      databaseURL: "https://futbolligi-c731d-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "futbolligi-c731d",
       storageBucket: "futbolligi-c731d.firebasestorage.app",
+      databaseURL: "https://futbolligi-c731d-default-rtdb.europe-west1.firebasedatabase.app",
       messagingSenderId: "142266639520",
       appId: "1:142266639520:web:fe5003adecf169565915c5",
       measurementId: "G-FQ0YHKFD0H"
@@ -499,7 +501,6 @@ footer .f-copy{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace
   <div id="fb-dot" style="width:7px;height:7px;border-radius:50%;background:#ca8a04;transition:background .5s"></div>
   <span id="fb-dot-lbl">Bağlanıyor…</span>
 </div>
-<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 
 <nav>
   <div class="nav-brand" onclick="showPage('home')">
@@ -1261,13 +1262,13 @@ function renderAnnouncePage(){
 }
 
 // ================================================================
-// ADMIN: AUTH (FİREBASE)
+// ADMIN: AUTH (FIREBASE)
 // ================================================================
 function doLogin(){
   const u = document.getElementById('au').value.trim();
   const p = document.getElementById('ap').value;
   
-  // Kolaylık için "@" yoksa varsayılan domaini ekleyelim
+  // Sadece "admin" yazılırsa @aybu.com ekle (kolaylık)
   const email = u.includes('@') ? u : u + '@aybu.com';
 
   firebase.auth().signInWithEmailAndPassword(email, p)
@@ -1300,8 +1301,13 @@ function initAdmin(){
   const t=new Date();
   document.getElementById('r-date').value=t.toISOString().split('T')[0];
   document.getElementById('up-date').value=t.toISOString().split('T')[0];
-  updateSelects();updateUpSelects();
-  renderAdminLog();renderAdminTeams();renderPlayerTeamSel();renderAnnLog();renderUpcomingLog();
+  updateSelects();
+  updateUpSelects();
+  renderAdminLog();
+  renderAdminTeams();
+  renderPlayerTeamSel();
+  renderAnnLog();
+  renderUpcomingLog();
 }
 
 // ================================================================
@@ -1344,7 +1350,7 @@ function submitResult(){
   }
 
   fbSave();
-  clearRForm();renderAdminLog();refreshAll();
+  clearRForm();
 }
 
 function editResult(ts){
@@ -1372,12 +1378,12 @@ function clearRForm(){
   document.getElementById('r-date').value=new Date().toISOString().split('T')[0];
 }
 
-function clearAll(){RESULTS=[];fbSave();renderAdminLog();refreshAll();}
+function clearAll(){RESULTS=[];fbSave();}
 
 function deleteResult(ts){
   if(!confirm('Bu maçı silmek istediğinize emin misiniz?'))return;
   RESULTS=RESULTS.filter(r=>r.ts!==ts);
-  fbSave();renderAdminLog();refreshAll();
+  fbSave();
   if(evMatchTs===ts){evMatchTs=null;document.getElementById('ev-editor').style.display='none';}
   if(editMatchTs===ts) clearRForm();
 }
@@ -1457,7 +1463,6 @@ function addMatchEvent(){
   match.events.sort((a,b)=>a.min-b.min);
   fbSave();
   document.getElementById('ev-min').value='';
-  renderEvLists(match);renderEvMatchList();refreshAll();
   const labels={goal:'Gol',assist:'Asist',yellow:'Sarı Kart',red:'Kırmızı Kart'};
   showAlert(al,`${player} – ${labels[evType]} (${min}')`,true);
 }
@@ -1465,7 +1470,7 @@ function addMatchEvent(){
 function deleteMatchEvent(mts,eid){
   const match=RESULTS.find(r=>r.ts===mts);if(!match)return;
   match.events=(match.events||[]).filter(e=>e.id!==eid);
-  fbSave();renderEvLists(match);renderEvMatchList();refreshAll();
+  fbSave();
 }
 
 function renderEvLists(match){
@@ -1507,12 +1512,11 @@ function addUpcoming(){
   UPCOMING.push({id:Date.now(),g,home,away,date,time,venue,ts:Date.now()});
   fbSave();
   showAlert(al,`${home} – ${away} programlandı`,true);
-  renderUpcomingLog();refreshAll();
 }
 
 function deleteUpcoming(id){
   UPCOMING=UPCOMING.filter(u=>u.id!==id);
-  fbSave();renderUpcomingLog();refreshAll();
+  fbSave();
 }
 
 function renderUpcomingLog(){
@@ -1541,12 +1545,11 @@ function addAnnouncement(){
   showAlert(al,'Duyuru yayınlandı',true);
   document.getElementById('ann-title').value='';
   document.getElementById('ann-body').value='';
-  renderAnnLog();refreshAll();
 }
 
 function deleteAnnouncement(id){
   ANNS=ANNS.filter(a=>a.id!==id);
-  fbSave();renderAnnLog();refreshAll();
+  fbSave();
 }
 
 function renderAnnLog(){
@@ -1601,7 +1604,6 @@ function handleTeamImg(oldName, input, imgId) {
   if (!file) return;
   if (file.size > 2 * 1024 * 1024) { alert('Maksimum dosya boyutu 2MB olmalıdır.'); return; }
 
-  // Yükleme sırasında kullanıcıya geri bildirim verelim
   const uploadZone = input.parentElement;
   const originalText = uploadZone.innerHTML;
   uploadZone.innerHTML = '<div class="upload-text">⏳ Yükleniyor...</div>';
@@ -1620,9 +1622,6 @@ function handleTeamImg(oldName, input, imgId) {
       uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
         TMETA[oldName] = { ...TMETA[oldName], img: downloadURL };
         fbSave(); 
-        
-        renderAdminTeams();
-        refreshAll();
       });
     }
   );
@@ -1630,7 +1629,7 @@ function handleTeamImg(oldName, input, imgId) {
 
 function removeTeamImg(name){
   if(TMETA[name])delete TMETA[name].img;
-  fbSave();renderAdminTeams();refreshAll();
+  fbSave();
 }
 
 function saveTeamInfo(g,i){
@@ -1646,7 +1645,6 @@ function saveTeamInfo(g,i){
     fbSave();fbSave(); 
   }
   showAlertId('r-alert',`${nw} kaydedildi`,true);
-  renderAdminTeams();updateSelects();updateUpSelects();refreshAll();renderPlayerTeamSel();
 }
 
 // ================================================================
@@ -1681,12 +1679,11 @@ function addPlayer(){
   fbSave();
   showAlertId('p-alert',`${name} eklendi`,true);
   document.getElementById('p-name').value='';document.getElementById('p-num').value='';
-  renderAdminPlayerList(selPTeam);refreshAll();
 }
 function deletePlayer(team,id){
   if(!confirm('Silinsin mi?'))return;
   PLAYERS[team]=(PLAYERS[team]||[]).filter(p=>p.id!==id);
-  fbSave();renderAdminPlayerList(team);refreshAll();
+  fbSave();
 }
 function renderAdminPlayerList(team){
   const el=document.getElementById('admin-player-list');
@@ -1755,12 +1752,33 @@ function showPage(id){
   if(id!=='team-detail')window.scrollTo({top:0,behavior:'smooth'});
 }
 
+// MAJÖR DÜZELTME: Admin panelindeki verilerin eşzamanlı olarak güncellenmesi sağlandı.
 function refreshAll(){
-  renderHome();renderStandings();renderMatches(mFilter);
-  if(document.getElementById('page-teams').classList.contains('active'))renderTeamsGrid();
-  if(curDetailTeam&&document.getElementById('page-team-detail').classList.contains('active'))openTeamDetail(curDetailTeam);
-  if(document.getElementById('page-announce').classList.contains('active'))renderAnnouncePage();
-  if(loggedIn)renderAdminLog();
+  renderHome();
+  renderStandings();
+  renderMatches(mFilter);
+  if(document.getElementById('page-teams').classList.contains('active')) renderTeamsGrid();
+  if(curDetailTeam&&document.getElementById('page-team-detail').classList.contains('active')) openTeamDetail(curDetailTeam);
+  if(document.getElementById('page-announce').classList.contains('active')) renderAnnouncePage();
+  
+  if(loggedIn){
+    renderAdminLog();
+    renderAdminTeams();
+    updateSelects();
+    updateUpSelects();
+    renderPlayerTeamSel();
+    renderAnnLog();
+    renderUpcomingLog();
+    if(document.getElementById('ev-editor').style.display === 'block') {
+        updateEvPlayerSel();
+        renderEvMatchList();
+        const match = RESULTS.find(r => r.ts === evMatchTs);
+        if(match) renderEvLists(match);
+    }
+    if(selPTeam) {
+        renderAdminPlayerList(selPTeam);
+    }
+  }
 }
 
 // ================================================================
@@ -1769,7 +1787,7 @@ function refreshAll(){
 function initFirebase(){
   if(!window.firebase){
     console.warn('Firebase not loaded, running offline');
-    renderHome();renderStandings();renderMatches();renderTeams();
+    refreshAll();
     return;
   }
   
@@ -1778,7 +1796,7 @@ function initFirebase(){
     : firebase.initializeApp(window.FIREBASE_CONFIG||{});
   window._db = firebase.database(app);
 
-  // Auth dinleyicisi (Önceki dosyada bu yoktu)
+  // Auth durumunu dinle
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       loggedIn = true;
@@ -1822,7 +1840,8 @@ function initFirebase(){
       PLAYERS  = toPlayers(d.players);
       ANNS     = toArr(d.anns);
     }
-    renderHome();renderStandings();renderMatches();renderTeams();
+    // Ana sayfayı VE admin sayfasını güncelle
+    refreshAll();
   }, err=>{
     document.getElementById('fb-loading').style.display='none';
     const dot = document.getElementById('fb-dot');
@@ -1838,7 +1857,7 @@ function initFirebase(){
     e.innerHTML = '🔥 Firebase Hatası<br><b>'+msg+'</b>';
     document.body.appendChild(e);
     setTimeout(()=>e.remove(), 15000);
-    renderHome();renderStandings();renderMatches();renderTeams();
+    refreshAll();
   });
 }
 initFirebase();
